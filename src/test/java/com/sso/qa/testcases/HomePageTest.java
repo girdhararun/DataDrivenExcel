@@ -2,13 +2,17 @@ package com.sso.qa.testcases;
 
 import com.sso.qa.base.TestBase;
 import com.sso.qa.pages.HomePage;
+import com.sso.qa.util.DataProviderSSO;
 import com.sso.qa.util.TestUtil;
-import org.testng.Assert;
 import org.testng.annotations.*;
+
+import java.io.IOException;
+import java.util.Map;
 
 public class HomePageTest extends TestBase {
     HomePage homePage;
     TestUtil testUtil;
+    DataProviderSSO dp;
     String sheetName = "data";
 
     public HomePageTest() {
@@ -24,19 +28,29 @@ public class HomePageTest extends TestBase {
         initialization();
         testUtil = new TestUtil();
         homePage = new HomePage();
+        dp = new DataProviderSSO();
         driver.get(prop.getProperty("url"));
     }
 
     @DataProvider
     public Object[][] getCRMTestData() {
-        Object data[][] = TestUtil.getTestData(sheetName);
+        Object data[][] = new Object[0][];
+        try {
+            data = dp.dataSupplier();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return data;
     }
 
     @Test(priority = 1, dataProvider = "getCRMTestData")
-    public void test1(String execution, String firstName, String lastName, String company) {
-            System.out.println(execution + firstName + lastName + company);
-    }
+    public void test1(Map<Object, Object> map) {
+        System.out.println("-------------Test case started ----------------");
+        System.out.println(map.get("execution"));
+        System.out.println(map.get("firstname"));
+        System.out.println(map.get("lastname"));
+
+        System.out.println("-------------Test case Ended ----------------");    }
 
     @Test(priority = 2)
     public void test2() {

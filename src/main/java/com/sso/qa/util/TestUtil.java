@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.sso.qa.base.TestBase;
 import org.apache.commons.io.FileUtils;
@@ -14,6 +16,7 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
+import org.testng.annotations.DataProvider;
 
 public class TestUtil extends TestBase {
 
@@ -31,6 +34,7 @@ public class TestUtil extends TestBase {
 		driver.switchTo().frame("mainpanel");
 	}
 
+	@DataProvider(name = "data")
 	public static Object[][] getTestData(String sheetName) {
 		FileInputStream file = null;
 		try {
@@ -50,10 +54,13 @@ public class TestUtil extends TestBase {
 		// System.out.println(sheet.getLastRowNum() + "--------" +
 		// sheet.getRow(0).getLastCellNum());
 		for (int i = 0; i < sheet.getLastRowNum(); i++) {
+			Map<Object, Object> datamap = new HashMap<Object,Object>();
 			for (int k = 0; k < sheet.getRow(0).getLastCellNum(); k++) {
-				data[i][k] = sheet.getRow(i + 1).getCell(k).toString();
+//				data[i][k] = sheet.getRow(i + 1).getCell(k).toString();
+				datamap.put(sheet.getRow(0).getCell(k).toString(),sheet.getRow(i + 1).getCell(k).toString());
 				// System.out.println(data[i][k]);
 			}
+			data[i][0] = datamap;
 		}
 		return data;
 	}
